@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rootwork — Discover Your Offer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bark:    #4A3B2A;
+    --umber:   #6B5240;
+    --clay:    #8C6E52;
+    --sand:    #C4A882;
+    --linen:   #F0E8DC;
+    --parchment: #FAF6F0;
+    --moss:    #4A5740;
+    --deep:    #1C1510;
+    --mist:    #7A8C72;
+    --crimson: #7A2030;
+
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body:    'Inter', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--parchment);
+    color: var(--bark);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(74, 59, 42, 0.08);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo-text {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--bark);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-cta {
+    font-family: var(--body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--parchment);
+    background: var(--bark);
+    border: none;
+    padding: 9px 22px;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--umber); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 5rem;
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--clay);
+  }
+
+  .hero-headline {
+    font-family: var(--display);
+    font-size: clamp(42px, 7vw, 72px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--deep);
+    margin-bottom: 2rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--umber);
+  }
+
+  .hero-hook {
+    font-family: var(--display);
+    font-size: clamp(18px, 2.5vw, 22px);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--clay);
+    border-left: 2px solid var(--sand);
+    padding-left: 1.25rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+    max-width: 560px;
+  }
+
+  .hero-body {
+    font-size: 16px;
+    color: var(--umber);
+    max-width: 520px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: var(--body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    background: var(--bark);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: var(--umber); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-ghost {
+    font-family: var(--body);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--clay);
+    text-decoration: none;
+    border-bottom: 1px solid var(--sand);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--bark); border-color: var(--clay); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(74, 59, 42, 0.12);
+  }
+
+  .divider-mark {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sand);
+  }
+
+  /* ── FOR SECTION ── */
+  .for-section {
+    padding: 5rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 2rem;
+  }
+
+  .for-section h2 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: 2.5rem;
+  }
+
+  .for-section h2 em {
+    font-style: italic;
+    color: var(--umber);
+  }
+
+  .for-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .for-list li {
+    font-size: 16px;
+    color: var(--umber);
+    font-weight: 300;
+    line-height: 1.6;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .for-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 6px;
+    height: 1px;
+    background: var(--sand);
+  }
+
+  /* ── WHAT SECTION ── */
+  .what-section {
+    background: var(--linen);
+    padding: 5rem 2rem;
+  }
+
+  .what-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .what-section h2 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: 3rem;
+  }
+
+  .what-section h2 em {
+    font-style: italic;
+    color: var(--umber);
+  }
+
+  .what-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .what-item {
+    padding: 1.5rem;
+    background: var(--parchment);
+    border: 1px solid rgba(74, 59, 42, 0.1);
+    border-radius: 2px;
+  }
+
+  .what-item-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+
+  .what-item h3 {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--bark);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .what-item p {
+    font-size: 14px;
+    color: var(--clay);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── COST SECTION ── */
+  .cost-section {
+    padding: 5rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .cost-section h2 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .cost-section h2 em { font-style: italic; color: var(--umber); }
+
+  .cost-body {
+    font-size: 16px;
+    color: var(--umber);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+  }
+
+  .cost-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+  }
+
+  .cost-list li {
+    font-size: 15px;
+    color: var(--umber);
+    font-weight: 300;
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .cost-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 6px;
+    height: 1px;
+    background: var(--crimson);
+    opacity: 0.5;
+  }
+
+  /* ── PULLQUOTE ── */
+  .pullquote-section {
+    background: var(--bark);
+    padding: 5rem 2rem;
+  }
+
+  .pullquote-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .pullquote {
+    font-family: var(--display);
+    font-size: clamp(24px, 4vw, 40px);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--linen);
+    line-height: 1.35;
+    margin-bottom: 1.5rem;
+  }
+
+  .pullquote-attr {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sand);
+    opacity: 0.7;
+  }
+
+  /* ── HOW SECTION ── */
+  .how-section {
+    padding: 5rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .how-section h2 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: 3rem;
+  }
+
+  .how-section h2 em { font-style: italic; color: var(--umber); }
+
+  .how-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .how-step {
+    display: flex;
+    gap: 2rem;
+    padding-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .how-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: 0;
+    width: 1px;
+    background: rgba(74, 59, 42, 0.12);
+  }
+
+  .how-step-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--sand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-size: 14px;
+    color: var(--clay);
+    background: var(--parchment);
+    position: relative;
+    z-index: 1;
+    margin-top: 2px;
+  }
+
+  .how-step-content h3 {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--bark);
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+
+  .how-step-content p {
+    font-size: 15px;
+    color: var(--clay);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── PRICE SECTION ── */
+  .price-section {
+    background: var(--linen);
+    padding: 5rem 2rem;
+  }
+
+  .price-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .price-inner h2 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .price-inner h2 em { font-style: italic; color: var(--umber); }
+
+  .price-amount {
+    font-family: var(--display);
+    font-size: 64px;
+    font-weight: 400;
+    color: var(--bark);
+    line-height: 1;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  .price-note {
+    font-size: 13px;
+    color: var(--clay);
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  .price-includes {
+    list-style: none;
+    text-align: left;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .price-includes li {
+    font-size: 15px;
+    color: var(--umber);
+    font-weight: 300;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .price-includes li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 6px;
+    height: 1px;
+    background: var(--moss);
+    opacity: 0.6;
+  }
+
+  .price-cta-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .price-guarantee {
+    font-size: 12px;
+    color: var(--clay);
+    font-weight: 300;
+    opacity: 0.8;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2.5rem 2rem;
+    border-top: 1px solid rgba(74, 59, 42, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--clay);
+  }
+
+  .footer-note {
+    font-size: 12px;
+    color: var(--clay);
+    font-weight: 300;
+    opacity: 0.7;
+  }
+
+  /* ── TREE SVG ── */
+  .hero-tree {
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    .hero-tree { display: none; }
+    nav { padding: 1rem 1.25rem; }
+    .hero { padding: 7rem 1.25rem 4rem; }
+    .for-section, .cost-section, .how-section { padding: 3.5rem 1.25rem; }
+    .what-section, .pullquote-section, .price-section { padding: 3.5rem 1.25rem; }
+    footer { padding: 2rem 1.25rem; }
+    .price-amount { font-size: 48px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo" aria-label="Rootwork home">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="14" cy="14" r="14" fill="#C4A882" opacity="0.25"/>
+      <path d="M14 22 C14 22 8 17.5 8 12 C8 8.7 10.7 6 14 6 C17.3 6 20 8.7 20 12 C20 17.5 14 22 14 22Z" fill="#6B5240" opacity="0.4"/>
+      <line x1="14" y1="12.5" x2="14" y2="23" stroke="#4A3B2A" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="14" y1="16" x2="11" y2="14" stroke="#4A3B2A" stroke-width="1" stroke-linecap="round"/>
+      <line x1="14" y1="19" x2="17" y2="17" stroke="#4A3B2A" stroke-width="1" stroke-linecap="round"/>
+      <circle cx="14" cy="12" r="2.5" fill="#4A3B2A"/>
+    </svg>
+    <span class="nav-logo-text">Rootwork</span>
+  </a>
+  <a href="https://square.link/u/GsSaxsbj" class="nav-cta" target="_blank">Begin</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">A guided offer discovery experience</div>
+
+  <h1 class="hero-headline">
+    You already have<br>
+    <em>everything you need.</em><br>
+    You just haven't<br>named it yet.
+  </h1>
+
+  <blockquote class="hero-hook">
+    "You don't need to be strong enough to hold on.<br>
+    You need something strong enough to hold onto."
+  </blockquote>
+
+  <p class="hero-body">
+    Rootwork is a structured, conversational interview that goes beneath your credentials and your resume — into your story, your wounds, your hard-won wisdom — and helps you shape it into a high-value offer the world actually needs.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#get-started" class="btn-primary">Start the interview</a>
+    <a href="#how-it-works" class="btn-ghost">See how it works</a>
+  </div>
+
+  <!-- decorative tree -->
+  <svg class="hero-tree" width="320" height="480" viewBox="0 0 320 480" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M160 460 L160 200" stroke="#4A3B2A" stroke-width="8" stroke-linecap="round"/>
+    <path d="M160 340 L100 280" stroke="#4A3B2A" stroke-width="5" stroke-linecap="round"/>
+    <path d="M160 310 L220 250" stroke="#4A3B2A" stroke-width="5" stroke-linecap="round"/>
+    <path d="M160 270 L110 210" stroke="#4A3B2A" stroke-width="4" stroke-linecap="round"/>
+    <path d="M160 250 L210 190" stroke="#4A3B2A" stroke-width="4" stroke-linecap="round"/>
+    <path d="M160 220 L130 170" stroke="#4A3B2A" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="160" cy="160" rx="70" ry="90" fill="#4A5740" opacity="0.5"/>
+    <ellipse cx="105" cy="240" rx="45" ry="60" fill="#4A5740" opacity="0.4"/>
+    <ellipse cx="215" cy="220" rx="45" ry="60" fill="#4A5740" opacity="0.4"/>
+    <ellipse cx="120" cy="175" rx="38" ry="50" fill="#4A5740" opacity="0.35"/>
+    <ellipse cx="200" cy="165" rx="38" ry="50" fill="#4A5740" opacity="0.35"/>
+    <path d="M140 460 C120 450 100 440 90 420 C80 400 85 380 100 370" stroke="#4A3B2A" stroke-width="3" stroke-linecap="round"/>
+    <path d="M180 460 C200 450 220 440 230 420 C240 400 235 380 220 370" stroke="#4A3B2A" stroke-width="3" stroke-linecap="round"/>
+    <path d="M155 465 C145 480 130 490 110 488" stroke="#4A3B2A" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M165 465 C175 480 190 490 210 488" stroke="#4A3B2A" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark"></div><div class="divider-line"></div></div>
+
+<!-- FOR WHOM -->
+<section class="for-section">
+  <p class="section-label">Who this is for</p>
+  <h2>Built for healers, helpers, <em>thirsty minds</em><br>and <em>aching hearts.</em></h2>
+  <ul class="for-list">
+    <li>Counselors who yearn for emotional rest — and who suspect the answer isn't just fewer clients</li>
+    <li>People recovering from anything — addiction, loss, a relationship that ended, a faith that collapsed, a version of themselves they had to leave behind</li>
+    <li>Spiritually serious people who've outgrown the frameworks they were handed and need something with real roots</li>
+    <li>Helpers who know they have something to offer the world but haven't found the words for it yet</li>
+    <li>Anyone who has lived through something hard enough to teach — and suspects that's exactly the point</li>
+  </ul>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark"></div><div class="divider-line"></div></div>
+
+<!-- WHAT IS IT -->
+<section class="what-section">
+  <div class="what-inner">
+    <p class="section-label">What Rootwork is</p>
+    <h2>Not a course. Not a coach.<br><em>A mirror with a map.</em></h2>
+    <div class="what-grid">
+      <div class="what-item">
+        <svg class="what-item-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="16" cy="10" r="5" stroke="#4A3B2A" stroke-width="1.5"/>
+          <path d="M8 26 C8 21 12 18 16 18 C20 18 24 21 24 26" stroke="#4A3B2A" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3>A guided interview</h3>
+        <p>Six structured stages that go deeper than any intake form — into your story, your experience, and what you're actually built to offer.</p>
+      </div>
+      <div class="what-item">
+        <svg class="what-item-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M6 16 L13 23 L26 9" stroke="#4A3B2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>A named offer</h3>
+        <p>At the end, you receive a written summary — your offer title, core promise, audience, format, price point, and hook. Yours to take and act on.</p>
+      </div>
+      <div class="what-item">
+        <svg class="what-item-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M16 6 L16 26 M10 12 L16 6 L22 12" stroke="#4A3B2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>A starting place</h3>
+        <p>Not a finished product — a foundation. The roots go in first. Everything else grows from here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PULLQUOTE -->
+<section class="pullquote-section">
+  <div class="pullquote-inner">
+    <p class="pullquote">"Your reality today grows from what you believe about yourself. Change the root, change the fruit."</p>
+    <p class="pullquote-attr">— The idea behind Rootwork</p>
+  </div>
+</section>
+
+<!-- COST OF STAYING STUCK -->
+<section class="cost-section">
+  <p class="section-label">The cost of staying stuck</p>
+  <h2>What another year of searching<br><em>actually costs you.</em></h2>
+  <p class="cost-body">
+    You already know what it feels like to hit the ceiling of every framework you've tried — the one that promised transformation and delivered another tool you don't use. That's not failure. That's information.
+  </p>
+  <ul class="cost-list">
+    <li>Another year of running around the same mountain</li>
+    <li>Stagnation dressed up as discernment</li>
+    <li>The slow erosion of your vitality and creative fire</li>
+    <li>Never knowing what you were actually built to give</li>
+    <li>A potential that stays potential</li>
+  </ul>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-mark"></div><div class="divider-line"></div></div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how-it-works">
+  <p class="section-label">How it works</p>
+  <h2>Six stages.<br><em>One honest conversation.</em></h2>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <div class="how-step-content">
+        <h3>Background discovery</h3>
+        <p>Your story, your turning points, the experiences that cracked you open. This is where the raw material lives.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <div class="how-step-content">
+        <h3>Skill extraction</h3>
+        <p>Every transformation you've lived through is something you can guide someone else through. We name them.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <div class="how-step-content">
+        <h3>Market alignment</h3>
+        <p>Who is waiting for exactly what you carry? We find the people whose problem is your lived answer.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">4</div>
+      <div class="how-step-content">
+        <h3>Offer architecture</h3>
+        <p>Format, structure, delivery. What shape does this take in the world so it can actually reach people?</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">5</div>
+      <div class="how-step-content">
+        <h3>High-ticket validation</h3>
+        <p>We stress-test the price. What is the transformation worth? What does inaction cost?</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">6</div>
+      <div class="how-step-content">
+        <h3>Positioning and messaging</h3>
+        <p>Your hook, your story angle, your core message. The words that make the right person feel seen before they've said a word.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE -->
+<section class="price-section" id="get-started">
+  <div class="price-inner">
+    <p class="section-label">Investment</p>
+    <h2>One session.<br><em>Your offer, named.</em></h2>
+    <div class="price-amount">$97</div>
+    <p class="price-note">One-time — instant access</p>
+    <ul class="price-includes">
+      <li>The full six-stage Rootwork interview</li>
+      <li>A written offer summary you keep forever</li>
+      <li>Your working title, hook, audience, and price point</li>
+      <li>A foundation to build anything from</li>
+    </ul>
+    <div class="price-cta-wrap">
+      <a href="https://square.link/u/GsSaxsbj" class="btn-primary" target="_blank">Begin Rootwork — $97</a>
+      <p class="price-guarantee">If you do the work and walk away with nothing useful, reach out. We'll make it right.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">Rootwork</span>
+  <span class="footer-note">Not therapy. Not coaching. Something older than both.</span>
+</footer>
+
+</body>
+</html>
