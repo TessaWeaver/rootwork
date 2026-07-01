@@ -883,7 +883,7 @@ function addOther(section) {
 
 // ── CLAUDE API ─────────────────────────────────────────────────
 async function callClaude(system, user) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  const r = await fetch('/.netlify/functions/claude', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, system, messages:[{role:'user',content:user}] })
   });
