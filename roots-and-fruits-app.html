@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roots & Fruits — A Guided Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bark: #4A3B2A; --umber: #6B5240; --clay: #8C6E52;
+  --sand: #C4A882; --linen: #F0E8DC; --parchment: #FAF6F0; --deep: #1C1510;
+  --fruit: #8B3A2A; --trunk: #3A5A30; --root: #7A5A1A; --truth: #2A4A6A;
+}
+body { background: var(--parchment); color: var(--bark); font-family: "Inter", system-ui, sans-serif; font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+nav { padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(74,59,42,0.1); background: rgba(250,246,240,0.96); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+.nav-brand { display: flex; align-items: center; gap: 8px; }
+.nav-logo { font-family: "Cormorant Garamond", serif; font-size: 20px; font-weight: 500; color: var(--bark); }
+.nav-progress { font-size: 11px; color: var(--clay); letter-spacing: 0.08em; text-transform: uppercase; }
+.progress-bar { height: 3px; background: rgba(74,59,42,0.1); }
+.progress-fill { height: 100%; background: var(--sand); transition: width 0.5s ease; }
+.screen { display: none; max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+.screen.active { display: block; }
+
+/* FLOATING TREE */
+#floatingTreeBtn { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; background: var(--bark); color: var(--parchment); border: none; border-radius: 50px; padding: 10px 16px; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; display: none; align-items: center; gap: 6px; box-shadow: 0 4px 16px rgba(74,59,42,0.25); transition: all 0.2s; }
+#floatingTreeBtn:hover { background: var(--umber); transform: translateY(-1px); }
+#treePeekModal { position: fixed; inset: 0; background: rgba(28,21,16,0.75); z-index: 300; display: none; align-items: flex-end; justify-content: center; padding: 1rem; }
+.tree-peek-box { background: var(--parchment); border-radius: 8px 8px 0 0; max-width: 600px; width: 100%; padding: 1.5rem; max-height: 75vh; overflow-y: auto; }
+.tree-peek-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.tree-peek-title { font-family: "Cormorant Garamond", serif; font-size: 18px; color: var(--deep); }
+.tree-peek-close { background: none; border: none; font-size: 20px; color: var(--clay); cursor: pointer; }
+
+/* BUTTONS */
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 12px 28px; background: var(--bark); color: var(--parchment); font-family: "Inter", sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 2px; cursor: pointer; transition: background 0.2s; }
+.btn-primary:hover { background: var(--umber); }
+.btn-how { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--linen); color: var(--bark); font-family: "Inter", sans-serif; font-size: 13px; border: 1px solid var(--sand); border-radius: 2px; cursor: pointer; transition: all 0.2s; margin-top: 0.75rem; width: 100%; max-width: 280px; }
+.btn-how:hover { background: #E8DDD0; }
+.btn-back { background: transparent; border: none; color: var(--clay); font-family: "Inter", sans-serif; font-size: 13px; cursor: pointer; padding: 8px 0; }
+.btn-back:hover { color: var(--bark); }
+.btn-secondary { padding: 9px 20px; background: transparent; border: 1px solid var(--sand); color: var(--clay); font-family: "Inter", sans-serif; font-size: 12px; border-radius: 2px; cursor: pointer; transition: all 0.2s; }
+.btn-secondary:hover { background: var(--linen); }
+
+/* SECTION */
+.section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--clay); }
+.section-title { font-family: "Cormorant Garamond", serif; font-size: clamp(28px, 5vw, 40px); font-weight: 400; color: var(--deep); line-height: 1.15; margin-bottom: 0.5rem; }
+.section-rule { width: 2.5rem; height: 1px; background: var(--sand); margin: 0.5rem 0 1.25rem; }
+.section-intro { font-size: 15px; color: var(--umber); font-weight: 300; line-height: 1.8; margin-bottom: 1.25rem; }
+
+/* BANNERS */
+.info-banner { padding: 0.6rem 1rem; margin-bottom: 1.25rem; border-radius: 0 3px 3px 0; }
+.info-banner p { font-size: 12px; color: var(--clay); margin-bottom: 2px; }
+.info-banner strong { font-family: "Cormorant Garamond", serif; font-size: 15px; font-style: italic; }
+.fruit-banner { background: rgba(139,58,42,0.08); border-left: 3px solid var(--fruit); }
+.fruit-banner strong { color: var(--fruit); }
+.trunk-banner { background: rgba(58,90,48,0.08); border-left: 3px solid var(--trunk); }
+.trunk-banner strong { color: var(--trunk); font-style: normal; font-size: 13px; }
+.root-banner { background: rgba(122,90,26,0.08); border-left: 3px solid var(--root); }
+.root-banner strong { color: var(--root); }
+.truth-banner { background: rgba(42,74,106,0.08); border-left: 3px solid var(--truth); }
+.truth-banner strong { color: var(--truth); }
+
+/* ROOT NOTE */
+.root-note { background: var(--linen); border: 1px solid rgba(196,168,130,0.5); border-radius: 3px; padding: 0.75rem 1rem 0.75rem 2.25rem; margin: 0.5rem 0 1rem; position: relative; }
+.root-note::before { content: ""; position: absolute; left: 12px; top: 14px; width: 7px; height: 7px; border-radius: 50%; background: var(--clay); }
+.root-note-label { font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--clay); margin-bottom: 3px; }
+.root-note p { font-size: 12px; font-style: italic; color: var(--umber); line-height: 1.6; }
+
+/* SOMATIC */
+.somatic-block { background: linear-gradient(135deg, rgba(240,232,220,0.6), rgba(230,222,210,0.4)); border: 1px solid rgba(196,168,130,0.4); border-radius: 4px; padding: 1rem 1.25rem; margin: 1rem 0; }
+.somatic-label { font-size: 9px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--clay); margin-bottom: 6px; }
+.somatic-block p { font-size: 13px; font-style: italic; color: var(--umber); line-height: 1.65; margin-bottom: 0.5rem; }
+
+/* PROMPTS */
+.prompt-block { margin-bottom: 1.5rem; }
+.prompt-text { font-family: "Cormorant Garamond", serif; font-size: 17px; font-style: italic; color: var(--bark); line-height: 1.5; margin-bottom: 0.5rem; }
+.prompt-text.fruit { color: var(--fruit); }
+.prompt-text.trunk { color: var(--trunk); }
+.prompt-text.root { color: var(--root); }
+.prompt-text.truth-c { color: var(--truth); }
+textarea.response { width: 100%; min-height: 80px; padding: 0.75rem 0; border: none; border-bottom: 1px solid var(--sand); background: transparent; font-family: "Inter", sans-serif; font-size: 14px; color: var(--bark); line-height: 1.7; resize: vertical; transition: border-color 0.2s; }
+textarea.response:focus { outline: none; border-bottom-color: var(--bark); }
+textarea.response::placeholder { color: var(--clay); opacity: 0.45; font-style: italic; }
+textarea.response.fruit { color: var(--fruit); }
+textarea.response.trunk { color: var(--trunk); }
+textarea.response.root { color: var(--root); font-weight: 500; }
+textarea.response.truth-c { color: var(--truth); }
+
+/* FRUIT CHIPS */
+.fruit-chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0; }
+.fruit-chip { padding: 6px 14px; border: 1px solid rgba(139,58,42,0.3); border-radius: 20px; font-size: 13px; font-style: italic; font-family: "Cormorant Garamond", serif; color: var(--fruit); background: rgba(139,58,42,0.05); cursor: pointer; transition: all 0.2s; }
+.fruit-chip:hover { background: rgba(139,58,42,0.1); }
+.fruit-chip.selected { background: rgba(139,58,42,0.15); border-color: var(--fruit); font-weight: 600; }
+.fruit-chip.selected::before { content: "\2713 "; font-style: normal; }
+
+/* DISTILL */
+.distill-wrap { margin-top: 1.25rem; padding: 1rem; background: rgba(240,232,220,0.5); border-radius: 3px; }
+.distill-wrap > p { font-size: 12px; color: var(--clay); margin-bottom: 0.6rem; }
+.distill-btn { padding: 8px 18px; background: var(--bark); color: var(--parchment); font-family: "Inter", sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; border: none; border-radius: 2px; cursor: pointer; transition: background 0.2s; }
+.distill-btn:hover { background: var(--umber); }
+.distill-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.redo-btn { padding: 6px 14px; background: transparent; border: 1px solid var(--sand); color: var(--clay); font-family: "Inter", sans-serif; font-size: 11px; border-radius: 2px; cursor: pointer; margin-left: 0.5rem; }
+.ai-thinking { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--clay); font-style: italic; padding: 0.5rem 0; }
+.dot-pulse { display: flex; gap: 3px; }
+.dot-pulse span { width: 4px; height: 4px; border-radius: 50%; background: var(--clay); animation: pulse 1.2s infinite; }
+.dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+.dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse { 0%,60%,100%{opacity:0.3;transform:scale(0.8)} 30%{opacity:1;transform:scale(1)} }
+.other-input-wrap { margin-top: 0.75rem; display: none; }
+.other-input-wrap input { width: 100%; padding: 8px 0; border: none; border-bottom: 1px solid var(--sand); background: transparent; font-family: "Inter", sans-serif; font-size: 14px; color: var(--bark); }
+.other-input-wrap input:focus { outline: none; border-bottom-color: var(--bark); }
+.add-other-btn { margin-top: 6px; padding: 6px 14px; background: transparent; border: 1px solid var(--sand); color: var(--clay); font-family: "Inter", sans-serif; font-size: 11px; border-radius: 2px; cursor: pointer; }
+
+/* TREE TAGS */
+.tree-tags { display: flex; flex-wrap: wrap; gap: 6px; min-height: 24px; }
+.tree-tag { font-size: 12px; padding: 3px 10px; border-radius: 20px; cursor: default; }
+.tree-tag.fruit { background: rgba(139,58,42,0.1); color: var(--fruit); font-style: italic; font-family: "Cormorant Garamond", serif; font-size: 13px; }
+.tree-tag.fruit.clickable { cursor: pointer; transition: all 0.15s; }
+.tree-tag.fruit.clickable:hover { background: rgba(139,58,42,0.2); transform: scale(1.05); }
+.tree-tag.trunk { background: rgba(58,90,48,0.1); color: var(--trunk); }
+.tree-tag.root { background: rgba(122,90,26,0.12); color: var(--root); font-weight: 600; }
+.tree-tag.truth { background: rgba(42,74,106,0.1); color: var(--truth); font-style: italic; }
+.tree-empty { font-size: 12px; color: var(--clay); opacity: 0.5; font-style: italic; }
+
+/* TREE DISPLAY */
+.tree-display { background: white; border: 1px solid rgba(196,168,130,0.3); border-radius: 4px; padding: 1rem; margin: 1rem 0; }
+.tree-display-title { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--clay); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+.tree-display-title::after { content:""; flex:1; height:1px; background:var(--sand); }
+.tree-layer { margin-bottom: 0.6rem; }
+.tree-layer-name { font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.tree-layer-name.fruit { color: var(--fruit); }
+.tree-layer-name.trunk { color: var(--trunk); }
+.tree-layer-name.root { color: var(--root); }
+.tree-layer-name.truth { color: var(--truth); }
+
+/* NAV BUTTONS */
+.nav-buttons { display: flex; align-items: center; justify-content: space-between; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(74,59,42,0.1); }
+
+/* SUMMARY */
+.summary-narrative { font-size: 15px; color: var(--bark); line-height: 1.85; font-weight: 300; margin-bottom: 1.5rem; font-family: "Cormorant Garamond", serif; font-size: 17px; }
+.summary-narrative p { margin-bottom: 1rem; }
+.summary-card { background: white; border: 1px solid rgba(74,59,42,0.1); border-radius: 3px; padding: 1.75rem; margin-bottom: 1.5rem; }
+.summary-card h2 { font-family: "Cormorant Garamond", serif; font-size: 24px; font-weight: 400; color: var(--deep); margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(74,59,42,0.1); }
+.summary-section { margin-bottom: 1.25rem; }
+.summary-section label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--clay); display: block; margin-bottom: 5px; font-weight: 500; }
+.summary-section p { font-size: 14px; color: var(--bark); line-height: 1.7; font-weight: 300; }
+.summary-quote { font-family: "Cormorant Garamond", serif; font-size: 16px; font-style: italic; color: var(--umber); border-left: 2px solid var(--sand); padding-left: 1rem; line-height: 1.5; margin-top: 1.5rem; }
+.action-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+.copy-btn, .print-btn { padding: 9px 20px; font-family: "Inter", sans-serif; font-size: 12px; border-radius: 2px; cursor: pointer; transition: all 0.2s; }
+.copy-btn { background: transparent; border: 1px solid var(--sand); color: var(--clay); }
+.copy-btn:hover { background: var(--linen); }
+.print-btn { background: var(--bark); border: none; color: var(--parchment); }
+.print-btn:hover { background: var(--umber); }
+
+/* JOURNAL */
+.journal-entry { background: white; border: 1px solid rgba(196,168,130,0.3); border-radius: 3px; padding: 1.25rem; margin-bottom: 1rem; cursor: pointer; transition: all 0.15s; }
+.journal-entry:hover { border-color: var(--sand); box-shadow: 0 2px 8px rgba(74,59,42,0.08); }
+.journal-entry-date { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--clay); margin-bottom: 4px; }
+.journal-entry-fruit { font-family: "Cormorant Garamond", serif; font-size: 18px; font-style: italic; color: var(--fruit); margin-bottom: 4px; }
+.journal-entry-root { font-size: 12px; color: var(--root); font-weight: 500; margin-bottom: 4px; }
+.journal-entry-truth { font-size: 12px; color: var(--truth); font-style: italic; }
+.journal-empty { font-size: 14px; color: var(--clay); font-style: italic; padding: 2rem 0; text-align: center; }
+
+/* EXPLAINER */
+#explainer-overlay { position: fixed; inset: 0; background: rgba(28,21,16,0.88); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.explainer-box { background: var(--parchment); border-radius: 6px; max-width: 540px; width: 100%; padding: 1.75rem; position: relative; max-height: 90vh; overflow-y: auto; }
+.explainer-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 20px; color: var(--clay); cursor: pointer; }
+.explainer-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.25rem; }
+.explainer-title { font-family: "Cormorant Garamond", serif; font-size: 22px; font-weight: 400; color: var(--deep); }
+.explainer-sub { font-size: 12px; color: var(--clay); margin-bottom: 1.25rem; font-style: italic; }
+.anim-stage { width: 100%; height: 210px; background: white; border-radius: 3px; margin-bottom: 1rem; border: 1px solid rgba(196,168,130,0.3); overflow: hidden; }
+.anim-text { font-size: 13px; color: var(--umber); line-height: 1.7; min-height: 5em; margin-bottom: 1rem; font-style: italic; background: var(--linen); padding: 0.75rem 1rem; border-radius: 3px; }
+.anim-controls { display: flex; align-items: center; justify-content: space-between; }
+.anim-step-dots { display: flex; gap: 6px; }
+.anim-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sand); transition: background 0.3s; cursor: pointer; }
+.anim-dot.active { background: var(--bark); }
+.anim-nav { display: flex; gap: 8px; }
+.anim-btn { padding: 7px 16px; font-family: "Inter", sans-serif; font-size: 12px; border-radius: 2px; cursor: pointer; }
+.anim-btn.prev { background: transparent; border: 1px solid var(--sand); color: var(--clay); }
+.anim-btn.next { background: var(--bark); border: none; color: var(--parchment); }
+.anim-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* WELCOME */
+.welcome-title { font-family: "Cormorant Garamond", serif; font-size: clamp(36px, 6vw, 52px); font-weight: 400; color: var(--deep); line-height: 1.1; margin-bottom: 1.5rem; }
+.welcome-body { font-size: 15px; color: var(--umber); font-weight: 300; line-height: 1.8; margin-bottom: 1rem; max-width: 500px; }
+.welcome-quote { font-family: "Cormorant Garamond", serif; font-size: 18px; font-style: italic; color: var(--clay); border-left: 2px solid var(--sand); padding-left: 1.25rem; margin: 1.75rem 0 1.5rem; line-height: 1.5; }
+
+@media print {
+  nav, .progress-bar, .nav-buttons, .action-row, #explainer-overlay, #floatingTreeBtn, #treePeekModal { display: none !important; }
+  .screen { display: block !important; padding: 0; max-width: 100%; }
+  .screen:not(#screen-summary) { display: none !important; }
+  #screen-summary { display: block !important; }
+  body { background: white; }
+}
+@media (max-width: 600px) { .screen { padding: 1.5rem 1rem 5rem; } nav { padding: 0.875rem 1rem; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <svg width="22" height="28" viewBox="0 0 44 56" fill="none">
+      <ellipse cx="22" cy="18" rx="14" ry="16" fill="#B8C4B0"/>
+      <ellipse cx="13" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+      <ellipse cx="31" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+      <rect x="19" y="32" width="6" height="14" rx="3" fill="#9A8070"/>
+      <path d="M22 46 C16 46 8 48 4 52" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M22 46 C28 46 36 48 40 52" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="nav-logo">Roots & Fruits</span>
+  </div>
+  <span class="nav-progress" id="navProgress"></span>
+</nav>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<button id="floatingTreeBtn" onclick="openTreePeek()">
+  <svg width="14" height="18" viewBox="0 0 44 56" fill="none">
+    <ellipse cx="22" cy="18" rx="14" ry="16" fill="#7AAA70"/>
+    <ellipse cx="13" cy="24" rx="10" ry="11" fill="#9ACA90"/>
+    <ellipse cx="31" cy="24" rx="10" ry="11" fill="#9ACA90"/>
+    <rect x="19" y="32" width="6" height="14" rx="3" fill="#C4A882"/>
+    <path d="M22 46 C16 46 8 48 4 52" stroke="#A88060" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <path d="M22 46 C28 46 36 48 40 52" stroke="#A88060" stroke-width="2" stroke-linecap="round" fill="none"/>
+  </svg>
+  My tree
+</button>
+
+<div id="treePeekModal" onclick="if(event.target===this)closeTreePeek()">
+  <div class="tree-peek-box">
+    <div class="tree-peek-header">
+      <span class="tree-peek-title">Your tree so far</span>
+      <button class="tree-peek-close" onclick="closeTreePeek()">&#x2715;</button>
+    </div>
+    <svg id="peekSvg" viewBox="0 0 480 290" width="100%" style="max-height:200px; margin-bottom:1rem;">
+      <line x1="30" y1="222" x2="450" y2="222" stroke="#C4A882" stroke-width="0.8" opacity="0.35"/>
+      <ellipse cx="240" cy="72" rx="80" ry="68" fill="#B8C4B0"/>
+      <ellipse cx="175" cy="94" rx="60" ry="55" fill="#C4CFC0"/>
+      <ellipse cx="305" cy="94" rx="60" ry="55" fill="#C4CFC0"/>
+      <circle cx="160" cy="64" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="205" cy="34" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="240" cy="22" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="275" cy="34" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="320" cy="64" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <rect x="226" y="130" width="28" height="96" rx="14" fill="#9A8070"/>
+      <path d="M229 148 C235 149 242 148 253 148" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M229 166 C235 167 242 166 253 166" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M229 184 C235 185 242 184 253 184" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M229 202 C235 203 242 202 253 202" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M232 226 C210 226 182 228 155 234" stroke="#8A7060" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <path d="M230 226 C206 230 176 240 148 250" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M228 226 C214 239 198 252 178 260" stroke="#8A7060" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      <path d="M248 226 C270 226 298 228 325 234" stroke="#8A7060" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <path d="M250 226 C274 230 304 240 332 250" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M252 226 C266 239 282 252 302 260" stroke="#8A7060" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      <g id="peek-fruit-labels"></g>
+      <g id="peek-trunk-labels"></g>
+      <g id="peek-root-labels"></g>
+      <g id="peek-truth-labels"></g>
+    </svg>
+    <div>
+      <div class="tree-layer"><div class="tree-layer-name fruit">Fruits</div><div class="tree-tags" id="peek-fruits-tags"></div></div>
+      <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name trunk">Trunk</div><div class="tree-tags" id="peek-trunk-tags"></div></div>
+      <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name root">Root</div><div class="tree-tags" id="peek-roots-tags"></div></div>
+      <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name truth">New truth</div><div class="tree-tags" id="peek-truth-tags"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPLAINER -->
+<div id="explainer-overlay" style="display:none;">
+  <div class="explainer-box">
+    <button class="explainer-close" onclick="closeExplainer()">&#x2715;</button>
+    <div class="explainer-header">
+      <svg width="28" height="36" viewBox="0 0 44 56" fill="none">
+        <ellipse cx="22" cy="18" rx="14" ry="16" fill="#B8C4B0"/>
+        <ellipse cx="13" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+        <ellipse cx="31" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+        <circle cx="15" cy="16" r="2.5" fill="#C4603A"/>
+        <circle cx="22" cy="10" r="2.5" fill="#C4603A"/>
+        <circle cx="29" cy="16" r="2.5" fill="#C4603A"/>
+        <rect x="19" y="32" width="6" height="12" rx="3" fill="#9A8070"/>
+        <path d="M22 44 C16 44 9 46 5 50" stroke="#8A7060" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <path d="M22 44 C28 44 35 46 39 50" stroke="#8A7060" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div><div class="explainer-title">How Roots &amp; Fruits works</div><div class="explainer-sub">Follow Maya&#39;s story &#8212; 6 steps</div></div>
+    </div>
+    <div class="anim-stage">
+      <svg id="animSvg" viewBox="0 0 480 210" width="100%" height="100%" fill="none">
+        <line x1="30" y1="178" x2="450" y2="178" stroke="#C4A882" stroke-width="1" opacity="0.4"/>
+        <ellipse id="ac-main" cx="240" cy="62" rx="70" ry="58" fill="#B8C4B0" opacity="0"/>
+        <ellipse id="ac-left" cx="185" cy="80" rx="52" ry="44" fill="#C4CFC0" opacity="0"/>
+        <ellipse id="ac-right" cx="295" cy="80" rx="52" ry="44" fill="#C4CFC0" opacity="0"/>
+        <rect id="at-trunk" x="228" y="105" width="24" height="76" rx="12" fill="#9A8070" opacity="0"/>
+        <path id="ar-l1" d="M235 181 C215 181 188 183 162 189" stroke="#8A7060" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0"/>
+        <path id="ar-l2" d="M233 181 C212 185 184 195 156 205" stroke="#8A7060" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0"/>
+        <path id="ar-r1" d="M245 181 C265 181 292 183 318 189" stroke="#8A7060" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0"/>
+        <path id="ar-r2" d="M247 181 C268 185 296 195 324 205" stroke="#8A7060" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0"/>
+        <circle id="afd1" cx="175" cy="54" r="7" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.8" opacity="0"/>
+        <circle id="afd2" cx="210" cy="28" r="7" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.8" opacity="0"/>
+        <circle id="afd3" cx="240" cy="16" r="7" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.8" opacity="0"/>
+        <circle id="afd4" cx="270" cy="28" r="7" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.8" opacity="0"/>
+        <circle id="afd5" cx="305" cy="54" r="7" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.8" opacity="0"/>
+        <text id="afl1" x="138" y="50" font-family="Georgia" font-style="italic" font-size="10" fill="#8B3A2A" opacity="0">withdrawal</text>
+        <text id="afl2" x="180" y="24" font-family="Georgia" font-style="italic" font-size="10" fill="#8B3A2A" opacity="0">anger</text>
+        <text id="afl3" x="215" y="10" font-family="Georgia" font-style="italic" font-size="10" fill="#8B3A2A" opacity="0">overwork</text>
+        <text id="afl4" x="274" y="24" font-family="Georgia" font-style="italic" font-size="10" fill="#8B3A2A" opacity="0">people-please</text>
+        <text id="afl5" x="308" y="50" font-family="Georgia" font-style="italic" font-size="10" fill="#8B3A2A" opacity="0">perfectionism</text>
+        <text id="atl1" x="258" y="172" font-family="Arial" font-size="9" fill="#3A5A30" opacity="0">"you're too much"</text>
+        <text id="atl2" x="258" y="158" font-family="Arial" font-size="9" fill="#3A5A30" opacity="0">dad left age 9</text>
+        <text id="atl3" x="258" y="144" font-family="Arial" font-size="9" fill="#3A5A30" opacity="0">grades = love</text>
+        <text id="arl1" x="95" y="198" font-family="Georgia" font-style="italic" font-weight="bold" font-size="9" fill="#7A5A1A" opacity="0">I am too much</text>
+        <text id="arl2" x="182" y="210" font-family="Georgia" font-style="italic" font-weight="bold" font-size="9" fill="#7A5A1A" opacity="0">I will be abandoned</text>
+        <text id="arl3" x="285" y="198" font-family="Georgia" font-style="italic" font-weight="bold" font-size="9" fill="#7A5A1A" opacity="0">I am not enough</text>
+        <text id="anew" x="155" y="222" font-family="Georgia" font-style="italic" font-size="9" fill="#2A4A6A" opacity="0">I am worthy of staying</text>
+      </svg>
+    </div>
+    <div class="anim-text" id="animText">Meet Maya. She is a 38-year-old nurse who keeps burning out. She loves her work but cannot stop taking on more than she can carry. She has tried setting limits. Nothing sticks. She does not know why yet.</div>
+    <div class="anim-controls">
+      <div class="anim-step-dots" id="animDots"></div>
+      <div class="anim-nav">
+        <button class="anim-btn prev" id="animPrev" onclick="animStep(-1)" disabled>&#8592; Prev</button>
+        <button class="anim-btn next" id="animNext" onclick="animStep(1)">Next &#8594;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div class="screen active" id="screen-welcome">
+  <div style="margin-bottom:1.75rem;">
+    <svg width="90" height="112" viewBox="0 0 44 56" fill="none">
+      <ellipse cx="22" cy="18" rx="14" ry="16" fill="#B8C4B0"/>
+      <ellipse cx="13" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+      <ellipse cx="31" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+      <circle cx="12" cy="16" r="3" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.5"/>
+      <circle cx="22" cy="9" r="3" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.5"/>
+      <circle cx="32" cy="16" r="3" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.5"/>
+      <rect x="19" y="32" width="6" height="14" rx="3" fill="#9A8070"/>
+      <path d="M22 46 C16 46 8 48 4 52" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M22 46 C28 46 36 48 40 52" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M22 46 C20 48 16 52 12 54" stroke="#8A7060" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      <path d="M22 46 C24 48 28 52 32 54" stroke="#8A7060" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+  <h1 class="welcome-title">Roots &amp;<br>Fruits</h1>
+  <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--clay);margin-bottom:1.5rem;">A Guided Experience</p>
+  <p class="welcome-body">Something is running your life that you cannot quite name. You see it in the patterns. The same wall, over and over.</p>
+  <p class="welcome-body">This experience asks you to follow that thread back to where it started &#8212; not to fix you, but to show you what is growing in your own ground so you can tend it with intention.</p>
+  <blockquote class="welcome-quote">&#8220;You don&#39;t need to get strong enough to hold on. You need something strong enough to hold onto.&#8221;</blockquote>
+  <p style="font-size:12px;color:var(--clay);margin-bottom:1rem;font-style:italic;">Five sections. Your own pace. No wrong answers.</p>
+  <p style="font-size:11px;color:var(--clay);opacity:0.7;margin-bottom:1.5rem;">Your journal entries are saved on this device and browser. Clearing your browser cache will remove them.</p>
+  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:0.25rem;">
+    <button class="btn-primary" onclick="goTo('screen-before')">Begin &#8599;</button>
+    <button class="btn-how" onclick="openExplainer()">
+      <svg width="20" height="26" viewBox="0 0 44 56" fill="none">
+        <ellipse cx="22" cy="18" rx="14" ry="16" fill="#B8C4B0"/>
+        <ellipse cx="13" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+        <ellipse cx="31" cy="24" rx="10" ry="11" fill="#C4CFC0"/>
+        <circle cx="15" cy="16" r="2.5" fill="#C4603A"/>
+        <circle cx="22" cy="10" r="2.5" fill="#C4603A"/>
+        <circle cx="29" cy="16" r="2.5" fill="#C4603A"/>
+        <rect x="19" y="32" width="6" height="12" rx="3" fill="#9A8070"/>
+        <path d="M22 44 C16 44 9 46 5 50" stroke="#8A7060" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <path d="M22 44 C28 44 35 46 39 50" stroke="#8A7060" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      </svg>
+      See how it works
+    </button>
+    <button class="btn-how" onclick="goTo('screen-journal')" style="margin-top:0.25rem;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C6E52" stroke-width="1.5" stroke-linecap="round">
+        <path d="M4 6h16M4 10h16M4 14h10"/><rect x="2" y="3" width="20" height="18" rx="2"/>
+      </svg>
+      My journal
+    </button>
+  </div>
+</div>
+
+<!-- BEFORE WE BEGIN -->
+<div class="screen" id="screen-before">
+  <div class="section-label">Before we begin</div>
+  <h2 class="section-title">A few things<br>worth knowing</h2>
+  <div class="section-rule"></div>
+  <p class="section-intro" style="font-style:italic;color:var(--bark);font-family:'Cormorant Garamond',serif;font-size:17px;">This experience won&#39;t tell you what to feel or when to feel it. It will just ask you to keep going until something becomes clear. Trust that.</p>
+  <p class="section-intro">Your beliefs were not mistakes. They were your mind&#39;s best attempt to keep you safe with the information it had. Most of us are more resilient and adaptive than we know &#8212; complex beings with shadow and light.</p>
+  <div style="background:var(--linen);border-radius:4px;padding:1.25rem;margin:1.25rem 0;border-left:3px solid var(--sand);">
+    <p style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--bark);margin-bottom:0.75rem;">About the roots</p>
+    <p style="font-size:14px;color:var(--umber);line-height:1.8;font-weight:300;">Your earliest beliefs weren&#39;t reasoned out. They were written into your nervous system before you had the capacity to question them. In early childhood, what you experienced simply <em>was</em> true &#8212; not because you were naive, but because that is how perception works before the mind develops the distance to doubt. Words came later. The belief came first.</p>
+    <p style="font-size:14px;color:var(--umber);line-height:1.8;font-weight:300;margin-top:0.75rem;">The roots were there long before you could see the fruits. The trunk &#8212; the experiences of your life &#8212; did not create the roots. It revealed and reinforced what was already planted. This work does not plant anything new. It helps you see what has been growing the whole time.</p>
+  </div>
+  <p class="section-intro">This work is not about deciding whether you are broken or whole. It is about choosing, with fuller awareness, what you do next.</p>
+  <div class="root-note"><div class="root-note-label">Root Note</div><p>Part of this work is learning what is truly yours and what belongs to someone else. You did not choose the experiences that shaped your early beliefs. You do get to choose what you do with them now.</p></div>
+  <p style="font-size:13px;color:var(--clay);font-style:italic;margin-top:0.5rem;">Information is not transformation. This experience is the bridge.</p>
+  <div class="nav-buttons">
+    <button class="btn-back" onclick="goBack()">&#8592; Back</button>
+    <button class="btn-primary" onclick="goTo('screen-opening')">Continue &#8599;</button>
+  </div>
+</div>
+
+<!-- OPENING -->
+<div class="screen" id="screen-opening">
+  <div class="section-label">Opening</div>
+  <h2 class="section-title">What feels close<br>to the surface?</h2>
+  <div class="section-rule"></div>
+  <p class="section-intro">Don&#39;t think too hard. Just write what&#39;s present and real for you right now.</p>
+  <textarea class="response" id="opening-response" rows="7" placeholder="There is no wrong answer. There is only what is true for you today..." spellcheck="true"></textarea>
+  <div class="nav-buttons">
+    <button class="btn-back" onclick="goBack()">&#8592; Back</button>
+    <button class="btn-primary" onclick="goTo('screen-fruits')">Continue &#8599;</button>
+  </div>
+</div>
+
+<!-- PART ONE: FRUITS -->
+<div class="screen" id="screen-fruits">
+  <div class="section-label" style="color:var(--fruit);">Part One</div>
+  <h2 class="section-title" style="color:var(--fruit);">The Fruits</h2>
+  <div class="section-rule" style="background:var(--fruit);opacity:0.4;"></div>
+  <p class="section-intro">Fruits are what&#39;s visible &#8212; the patterns, behaviors, and reactions that keep showing up no matter how hard you try to change them. We start here not because the fruits are the problem, but because they are the door.</p>
+  <p class="section-intro" style="font-size:13px;">Answer all four prompts. Then distill your fruits. You&#39;ll choose one to follow all the way to its root.</p>
+  <div class="prompt-block">
+    <p class="prompt-text fruit">What patterns keep showing up in your life, no matter how hard you try to change them?</p>
+    <textarea class="response fruit" id="fruit-1" rows="4" placeholder="Think behaviors, not explanations..." spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>&#39;I always end up doing the work alone.&#39; &#39;I say yes when I mean no.&#39; &#39;I shut down when things get close.&#39; Name them plainly.</p></div>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text fruit">What do the people closest to you reflect back to you that you resist hearing?</p>
+    <textarea class="response fruit" id="fruit-2" rows="4" placeholder="Resistance is information..." spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text fruit">Where do you feel most stuck right now?</p>
+    <textarea class="response fruit" id="fruit-3" rows="3" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text fruit">When you start to feel the emotion you named, what do you notice yourself doing? This might be something you reach for, something you avoid, or a way you behave that seems to happen almost automatically &#8212; before you&#39;ve even decided to do it.</p>
+    <textarea class="response fruit" id="fruit-4" rows="4" placeholder="" spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>These patterns are not character flaws. They are responses that once made sense. You are not being asked to judge them &#8212; only to name them.</p></div>
+  </div>
+  <div class="distill-wrap">
+    <p>When you&#39;re ready, let the experience find your fruit labels. Then choose one to follow to its root.</p>
+    <button class="distill-btn" id="distill-fruits-btn" onclick="distillFruits()">Distill my fruits &#8599;</button>
+    <div id="fruits-thinking" style="display:none;" class="ai-thinking"><div class="dot-pulse"><span></span><span></span><span></span></div> Finding your fruits...</div>
+    <div id="fruits-result" style="display:none;margin-top:0.75rem;"></div>
+    <div class="other-input-wrap" id="fruits-other-wrap">
+      <input type="text" id="fruits-other-input" placeholder="Add your own fruit..." spellcheck="true"/>
+      <button class="add-other-btn" onclick="addOther('fruits')">Add &#43;</button>
+    </div>
+  </div>
+  <div id="fruit-selection" style="display:none;margin-top:1.25rem;">
+    <p style="font-size:13px;color:var(--bark);margin-bottom:0.5rem;font-style:italic;">Choose one fruit to follow through the rest of this experience:</p>
+    <div class="fruit-chip-wrap" id="fruit-chips"></div>
+    <p style="font-size:11px;color:var(--clay);margin-top:0.5rem;">You can return to work through the others any time.</p>
+  </div>
+  <div class="nav-buttons">
+    <button class="btn-back" onclick="goBack()">&#8592; Back</button>
+    <button class="btn-primary" onclick="proceedToTrunk()">Continue &#8599;</button>
+  </div>
+</div>
+
+<!-- PART TWO: TRUNK -->
+<div class="screen" id="screen-trunk">
+  <div class="section-label" style="color:var(--trunk);">Part Two</div>
+  <h2 class="section-title" style="color:var(--trunk);">The Trunk</h2>
+  <div class="section-rule" style="background:var(--trunk);opacity:0.4;"></div>
+  <div id="trunk-fruit-banner" class="info-banner fruit-banner" style="display:none;">
+    <p>You are working with this fruit:</p>
+    <strong id="trunk-fruit-name"></strong>
+  </div>
+  <p class="section-intro">The trunk holds the experiences that revealed and reinforced the root &#8212; the moments that confirmed what your nervous system already suspected was true about you. We use emotion and the body to find our way there.</p>
+  <div class="somatic-block">
+    <div class="somatic-label">Body check-in &#8212; start here</div>
+    <p>Bring the fruit you chose to mind. Sit with it for a moment before writing.</p>
+    <p>Where do you feel it in your body right now? Chest, stomach, throat, jaw, shoulders? You don&#39;t have to like the feeling &#8212; just notice it.</p>
+    <textarea class="response" id="trunk-somatic" rows="3" placeholder="I notice a feeling of... / I feel it in my..." spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text trunk">Staying with that sensation &#8212; what emotion or feeling word goes with it, even if it surprises you?</p>
+    <textarea class="response trunk" id="trunk-emotion" rows="3" placeholder="Anger. Fear. Shame. Loneliness. Grief. There is no wrong answer." spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>Anger almost always has something underneath it &#8212; usually fear or grief. If anger came up, ask: what am I afraid of losing, or what have I already lost?</p></div>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text trunk">What memories come up when you sit with this feeling? Any association that surfaces is the right one &#8212; your nervous system is pointing you somewhere.</p>
+    <textarea class="response trunk" id="trunk-1" rows="5" placeholder="Let the memories come without filtering them. Write what surfaces." spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>You don&#39;t have to understand why a memory is coming up. Just write it down. The connection will become clearer as you go.</p></div>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text trunk">Who was there in those early memories? What was said &#8212; or not said &#8212; that landed in you?</p>
+    <textarea class="response trunk" id="trunk-2" rows="4" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text trunk">What did those experiences confirm about you &#8212; even silently, even without words?</p>
+    <textarea class="response trunk" id="trunk-3" rows="4" placeholder="" spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>Stay with yourself here. Not what it said about them &#8212; about you. Even if it feels unfair, what did some part of you quietly conclude?</p></div>
+  </div>
+  <div class="distill-wrap">
+    <p>When you&#39;re ready, distill your trunk experiences into labels for your tree.</p>
+    <button class="distill-btn" id="distill-trunk-btn" onclick="distillSection('trunk')">Distill my trunk experiences &#8599;</button>
+    <div id="trunk-thinking" style="display:none;" class="ai-thinking"><div class="dot-pulse"><span></span><span></span><span></span></div> Finding your trunk experiences...</div>
+    <div id="trunk-result" style="display:none;margin-top:0.75rem;"></div>
+    <div class="other-input-wrap" id="trunk-other-wrap">
+      <input type="text" id="trunk-other-input" placeholder="Add your own..." spellcheck="true"/>
+      <button class="add-other-btn" onclick="addOther('trunk')">Add &#43;</button>
+    </div>
+  </div>
+  <div class="nav-buttons">
+    <button class="btn-back" onclick="goBack()">&#8592; Back</button>
+    <button class="btn-primary" onclick="goTo('screen-roots')">Continue &#8599;</button>
+  </div>
+</div>
+
+<!-- PART THREE: ROOTS -->
+<div class="screen" id="screen-roots">
+  <div class="section-label" style="color:var(--root);">Part Three</div>
+  <h2 class="section-title" style="color:var(--root);">The Roots</h2>
+  <div class="section-rule" style="background:var(--root);opacity:0.4;"></div>
+  <div id="roots-trunk-banner" class="info-banner trunk-banner" style="display:none;">
+    <p>The trunk experiences you found:</p>
+    <strong id="roots-trunk-name"></strong>
+  </div>
+  <p class="section-intro">Roots are the core beliefs that have been operating underground &#8212; formed before you had words, written into your nervous system before you could question them. They are not the truth. But they have been acting like it.</p>
+  <div class="prompt-block">
+    <p class="prompt-text root">Look at the trunk experiences above. What did those moments tell you about you &#8212; not about them, not about the world &#8212; specifically about you?</p>
+    <textarea class="response root" id="root-1" rows="4" placeholder="" spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>Watch for the jump. &#39;She read my journal&#39; tells you what happened. &#39;My thoughts are disgusting, so I must be disgusting&#39; tells you what you believed it meant about you. Keep going until it&#39;s about you.</p></div>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text root">Now ask again &#8212; and what does that mean about you?</p>
+    <textarea class="response root" id="root-2" rows="3" placeholder="" spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>Each answer will get shorter and more essential. You are looking for the floor &#8212; the place where there&#39;s nothing underneath anymore. Keep asking.</p></div>
+  </div>
+  <div class="somatic-block">
+    <div class="somatic-label">Body check-in</div>
+    <p>Check in with your body again. Has something shifted? Sometimes when we get close to a root there is a feeling of recognition &#8212; like a puzzle piece clicking into place. The image gets a little bigger, a little clearer.</p>
+    <p style="margin-top:0.5rem;">What are you noticing right now?</p>
+    <textarea class="response" id="root-somatic" rows="3" placeholder="I notice... / Something feels..." spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text root">Write the root as simply as you can. As few words as possible.</p>
+    <textarea class="response root" id="root-3" rows="3" placeholder="I am... / I cannot... / I will always..." spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>Roots sound like: &#39;I am not enough.&#39; &#39;I am a burden.&#39; &#39;I cannot be trusted.&#39; One sentence. Or less.</p></div>
+  </div>
+  <div class="distill-wrap">
+    <p>When you&#39;re ready, distill your root belief.</p>
+    <button class="distill-btn" id="distill-roots-btn" onclick="distillSection('roots')">Distill my root belief &#8599;</button>
+    <div id="roots-thinking" style="display:none;" class="ai-thinking"><div class="dot-pulse"><span></span><span></span><span></span></div> Finding your root belief...</div>
+    <div id="roots-result" style="display:none;margin-top:0.75rem;"></div>
+    <div class="other-input-wrap" id="roots-other-wrap">
+      <input type="text" id="roots-other-input" placeholder="Add your own..." spellcheck="true"/>
+      <button class="add-other-btn" onclick="addOther('roots')">Add &#43;</button>
+    </div>
+  </div>
+  <div class="nav-buttons">
+    <button class="btn-back" onclick="goBack()">&#8592; Back</button>
+    <button class="btn-primary" onclick="goTo('screen-truth')">Continue &#8599;</button>
+  </div>
+</div>
+
+<!-- PART FOUR: TRUTH -->
+<div class="screen" id="screen-truth">
+  <div class="section-label" style="color:var(--truth);">Part Four</div>
+  <h2 class="section-title" style="color:var(--truth);">The Truth</h2>
+  <div class="section-rule" style="background:var(--truth);opacity:0.4;"></div>
+  <div id="truth-root-banner" class="info-banner root-banner" style="display:none;">
+    <p>The root you found:</p>
+    <strong id="truth-root-name"></strong>
+  </div>
+  <p class="section-intro">The old root is still there. It is strong. Naming it does not remove it. But you can plant something alongside it. A tree growing crooked on a hill does not straighten overnight when replanted on level ground &#8212; but it does, slowly, begin to grow toward the light.</p>
+  <div class="prompt-block">
+    <p class="prompt-text truth-c">What information was the root belief missing? What didn&#39;t the younger version of you know yet?</p>
+    <textarea class="response truth-c" id="truth-1" rows="5" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text truth-c">What would you say to a child who believed this about themselves?</p>
+    <textarea class="response truth-c" id="truth-2" rows="4" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text truth-c" id="truth-3-prompt">What is the most honest and most generous thing that could be true about you today, instead of the belief you started with? <span style="font-size:13px;font-style:normal;color:var(--root);" id="truth3-root-ref"></span></p>
+    <textarea class="response truth-c" id="truth-3" rows="4" placeholder="" spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>This is not positive thinking. It is not replacing a lie with a prettier lie. It is asking: given everything you now know, what is more true than what you believed?</p></div>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text truth-c">Write the new truth as simply as you can.</p>
+    <textarea class="response truth-c" id="truth-4" rows="3" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="distill-wrap">
+    <p>When you&#39;re ready, distill your new truth.</p>
+    <button class="distill-btn" id="distill-truth-btn" onclick="distillSection('truth')">Distill my new truth &#8599;</button>
+    <div id="truth-thinking" style="display:none;" class="ai-thinking"><div class="dot-pulse"><span></span><span></span><span></span></div> Distilling your new truth...</div>
+    <div id="truth-result" style="display:none;margin-top:0.75rem;"></div>
+    <div class="other-input-wrap" id="truth-other-wrap">
+      <input type="text" id="truth-other-input" placeholder="Add your own..." spellcheck="true"/>
+      <button class="add-other-btn" onclick="addOther('truth')">Add &#43;</button>
+    </div>
+  </div>
+  <div class="tree-display" style="margin-top:1.5rem;">
+    <div class="tree-display-title">Your tree so far</div>
+    <div class="tree-layer"><div class="tree-layer-name fruit">Fruit you worked with</div><div class="tree-tags" id="tt-fruit"></div></div>
+    <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name trunk">Trunk</div><div class="tree-tags" id="tt-trunk"></div></div>
+    <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name root">Root</div><div class="tree-tags" id="tt-root"></div></div>
+    <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name truth">New truth</div><div class="tree-tags" id="tt-truth"></div></div>
+  </div>
+  <div class="nav-buttons">
+    <button class="btn-back" onclick="goBack()">&#8592; Back</button>
+    <button class="btn-primary" onclick="goTo('screen-choices')">Continue to Choices &#8599;</button>
+  </div>
+</div>
+
+<!-- PART FIVE: CHOICES -->
+<div class="screen" id="screen-choices">
+  <div class="section-label">Part Five</div>
+  <h2 class="section-title">The Choices</h2>
+  <div class="section-rule"></div>
+  <div id="choices-truth-banner" class="info-banner truth-banner" style="display:none;">
+    <p>The new truth you found:</p>
+    <strong id="choices-truth-name"></strong>
+  </div>
+  <p class="section-intro">Now you have choices where you didn&#39;t have them before. Not because you are stronger. Because you have something stronger to hold onto.</p>
+  <div class="somatic-block" id="choices-somatic-recall" style="display:none;">
+    <div class="somatic-label">What you noticed in your body</div>
+    <p id="choices-somatic-text" style="font-size:13px;color:var(--umber);font-style:normal;"></p>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text" id="choices-prompt-1">The next time you notice this pattern showing up, you now know these are connected to the root of <strong id="choices-root-inline" style="color:var(--root);"></strong>. Write in your own words how you want to remember that connection.</p>
+    <textarea class="response" id="choice-1" rows="4" placeholder="" spellcheck="true"></textarea>
+    <div class="root-note"><div class="root-note-label">Root Note</div><p>You may not feel different yet. The old root is still there and still strong. What changes first is the moment of recognition &#8212; and that moment is everything.</p></div>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text">What is one small thing you could do differently this week that the old root would not have allowed?</p>
+    <textarea class="response" id="choice-2" rows="4" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text" id="choices-prompt-3">If <span id="choices-root-phrase" style="color:var(--root);font-style:italic;"></span> were not true &#8212; and <span id="choices-truth-phrase" style="color:var(--truth);font-style:italic;"></span> were more real &#8212; what would become possible for you?</p>
+    <textarea class="response" id="choice-3" rows="5" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="prompt-block">
+    <p class="prompt-text">What do you want to carry forward from this experience?</p>
+    <textarea class="response" id="choice-4" rows="4" placeholder="" spellcheck="true"></textarea>
+  </div>
+  <div class="nav-buttons">
+    <button class="btn-back" onclick="goBack()">&#8592; Back</button>
+    <button class="btn-primary" onclick="goTo('screen-summary')">See your summary &#8599;</button>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="screen" id="screen-summary">
+  <div class="section-label">Complete</div>
+  <h2 class="section-title">Your tree,<br>complete</h2>
+  <div class="section-rule"></div>
+  <div style="background:white;border:1px solid rgba(196,168,130,0.3);border-radius:4px;padding:1rem;margin-bottom:1.25rem;">
+    <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--clay);margin-bottom:0.75rem;">Your Tree</p>
+    <svg id="summarySvg" viewBox="0 0 480 310" width="100%" style="max-height:260px;">
+      <line x1="30" y1="228" x2="450" y2="228" stroke="#C4A882" stroke-width="0.8" opacity="0.35"/>
+      <ellipse cx="240" cy="72" rx="80" ry="68" fill="#B8C4B0"/>
+      <ellipse cx="175" cy="94" rx="60" ry="55" fill="#C4CFC0"/>
+      <ellipse cx="305" cy="94" rx="60" ry="55" fill="#C4CFC0"/>
+      <circle cx="160" cy="64" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="205" cy="34" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="240" cy="22" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="275" cy="34" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <circle cx="320" cy="64" r="6" fill="#C4603A" stroke="#8B3A2A" stroke-width="0.7"/>
+      <rect x="226" y="130" width="28" height="102" rx="14" fill="#9A8070"/>
+      <path d="M229 148 C235 149 242 148 253 148" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M229 166 C235 167 242 166 253 166" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M229 184 C235 185 242 184 253 184" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M229 202 C235 203 242 202 253 202" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M229 218 C235 219 242 218 253 218" stroke="#7A6050" stroke-width="0.6" fill="none"/>
+      <path d="M232 232 C210 232 182 234 155 240" stroke="#8A7060" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <path d="M230 232 C206 236 176 246 148 256" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M228 232 C214 245 198 258 178 266" stroke="#8A7060" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      <path d="M248 232 C270 232 298 234 325 240" stroke="#8A7060" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <path d="M250 232 C274 236 304 246 332 256" stroke="#8A7060" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M252 232 C266 245 282 258 302 266" stroke="#8A7060" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      <g id="sum-svg-fruits"></g>
+      <g id="sum-svg-trunk"></g>
+      <g id="sum-svg-roots"></g>
+      <g id="sum-svg-truth"></g>
+    </svg>
+    <div style="border-top:1px solid rgba(196,168,130,0.3);padding-top:0.75rem;margin-top:0.5rem;">
+      <div class="tree-layer"><div class="tree-layer-name fruit">All fruits identified</div><div class="tree-tags" id="sum-all-fruits"></div></div>
+      <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name fruit">Fruit worked through</div><div class="tree-tags" id="sum-chosen-fruit-tags"></div></div>
+      <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name trunk">Trunk</div><div class="tree-tags" id="sum-trunk"></div></div>
+      <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name root">Root</div><div class="tree-tags" id="sum-roots"></div></div>
+      <div class="tree-layer" style="margin-top:0.5rem;"><div class="tree-layer-name truth">New truth</div><div class="tree-tags" id="sum-truth"></div></div>
+    </div>
+  </div>
+
+  <div style="background:var(--linen);border-radius:4px;padding:1.5rem;margin-bottom:1.5rem;border:1px solid rgba(196,168,130,0.3);">
+    <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--clay);margin-bottom:1rem;">A reflection of what you shared</p>
+    <div id="summary-narrative" class="summary-narrative">
+      <div class="ai-thinking"><div class="dot-pulse"><span></span><span></span><span></span></div> <span style="font-size:13px;color:var(--clay);font-style:italic;">Writing your summary...</span></div>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <h2>In your own words</h2>
+    <div class="summary-section"><label>What felt close to the surface</label><p id="sum-opening"></p></div>
+    <div class="summary-section"><label>What you want to carry forward</label><p id="sum-forward"></p></div>
+    <div class="summary-quote">&#8220;It&#39;s okay to feel sad when sad things happen. Your feelings are not a verdict on your worth.&#8221;</div>
+  </div>
+
+  <div class="action-row">
+    <button class="print-btn" onclick="window.print()">&#128424; Print my summary</button>
+    <button class="copy-btn" onclick="copySummary()">Copy my summary</button>
+  </div>
+
+  <div style="margin-top:1.5rem;padding:1rem;background:var(--linen);border-radius:3px;">
+    <p style="font-size:13px;color:var(--bark);margin-bottom:0.75rem;font-style:italic;">Ready to work through another fruit?</p>
+    <div class="tree-tags" id="sum-other-fruits" style="margin-bottom:0.75rem;"></div>
+    <button class="btn-secondary" onclick="restartExperience(true)" style="margin-right:0.5rem;">Work through another fruit</button>
+    <button class="btn-secondary" onclick="restartExperience(false)">Start completely over</button>
+  </div>
+
+  <p style="font-size:12px;color:var(--clay);margin-top:2rem;font-style:italic;">This is your starting place. Not your ceiling. The roots go in first. Everything else grows from here.</p>
+  <p style="font-size:11px;color:var(--clay);margin-top:0.5rem;">Rootwork &#183; rootworkmethod.org</p>
+</div>
+
+<!-- JOURNAL -->
+<div class="screen" id="screen-journal">
+  <div class="section-label">My Journal</div>
+  <h2 class="section-title">Your entries</h2>
+  <div class="section-rule"></div>
+  <p class="section-intro" style="font-size:14px;">Each fruit you work through is saved here. Tap any entry to review it.</p>
+  <div id="journal-entries"></div>
+  <div style="margin-top:1.5rem;">
+    <button class="btn-primary" onclick="goTo('screen-welcome')">Start a new entry &#8599;</button>
+  </div>
+</div>
+
+<script>
+const state = { fruits:[], chosenFruit:'', trunk:[], roots:[], truth:[] };
+const responses = {};
+const screenOrder = ['screen-welcome','screen-before','screen-opening','screen-fruits','screen-trunk','screen-roots','screen-truth','screen-choices','screen-summary'];
+let currentScreen = 'screen-welcome';
+
+// ── STORAGE ────────────────────────────────────────────────────
+function saveEntry() {
+  try {
+    const entries = JSON.parse(localStorage.getItem('rf-journal') || '[]');
+    const entry = {
+      id: Date.now(),
+      date: new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}),
+      allFruits: [...state.fruits],
+      chosenFruit: state.chosenFruit,
+      trunk: [...state.trunk],
+      roots: [...state.roots],
+      truth: [...state.truth],
+      opening: document.getElementById('opening-response').value,
+      forward: document.getElementById('choice-4').value,
+      narrative: document.getElementById('summary-narrative').innerHTML,
+    };
+    entries.unshift(entry);
+    localStorage.setItem('rf-journal', JSON.stringify(entries.slice(0,50)));
+  } catch(e) { console.log('Storage not available'); }
+}
+
+function loadJournal() {
+  const container = document.getElementById('journal-entries');
+  try {
+    const entries = JSON.parse(localStorage.getItem('rf-journal') || '[]');
+    if (entries.length === 0) {
+      container.innerHTML = '<p class="journal-empty">No entries yet. Complete your first experience to see it here.</p>';
+      return;
+    }
+    container.innerHTML = entries.map(e => `
+      <div class="journal-entry" onclick="viewEntry(${e.id})">
+        <div class="journal-entry-date">${e.date}</div>
+        <div class="journal-entry-fruit">${e.chosenFruit || 'entry'}</div>
+        <div class="journal-entry-root">${e.roots.join(' · ')}</div>
+        <div class="journal-entry-truth">${e.truth.join(' · ')}</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    container.innerHTML = '<p class="journal-empty">Journal not available in this browser.</p>';
+  }
+}
+
+function viewEntry(id) {
+  try {
+    const entries = JSON.parse(localStorage.getItem('rf-journal') || '[]');
+    const entry = entries.find(e => e.id === id);
+    if (!entry) return;
+    alert(`${entry.date}\n\nFruit: ${entry.chosenFruit}\nRoot: ${entry.roots.join(', ')}\nNew truth: ${entry.truth.join(', ')}\n\nCarrying forward: ${entry.forward}`);
+  } catch(e) {}
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────
+function goTo(id) {
+  document.getElementById(currentScreen).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  currentScreen = id;
+  updateProgress();
+  window.scrollTo(0,0);
+  updateFloatingBtn();
+  if (id === 'screen-truth') {
+    updateTruthTree();
+    const ref = document.getElementById('truth3-root-ref');
+    if (ref && state.roots.length > 0) ref.textContent = '(' + state.roots.join(' / ') + ')';
+  }
+  if (id === 'screen-choices') updateChoicesPage();
+  if (id === 'screen-summary') updateSummary();
+  if (id === 'screen-journal') loadJournal();
+  updateBanners();
+}
+
+function goBack() {
+  const idx = screenOrder.indexOf(currentScreen);
+  if (idx > 0) goTo(screenOrder[idx-1]);
+  else goTo('screen-welcome');
+}
+
+function updateProgress() {
+  const idx = screenOrder.indexOf(currentScreen);
+  const pct = idx < 0 ? 0 : Math.round((idx/(screenOrder.length-1))*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  const labels = {'screen-welcome':'','screen-before':'Before we begin','screen-opening':'Opening','screen-fruits':'Part 1 - Fruits','screen-trunk':'Part 2 - Trunk','screen-roots':'Part 3 - Roots','screen-truth':'Part 4 - Truth','screen-choices':'Part 5 - Choices','screen-summary':'Complete','screen-journal':'Journal'};
+  document.getElementById('navProgress').textContent = labels[currentScreen]||'';
+}
+
+function updateFloatingBtn() {
+  const btn = document.getElementById('floatingTreeBtn');
+  const showOn = ['screen-trunk','screen-roots','screen-truth','screen-choices'];
+  btn.style.display = showOn.includes(currentScreen) ? 'flex' : 'none';
+}
+
+function updateBanners() {
+  const tb = document.getElementById('trunk-fruit-banner');
+  const tfn = document.getElementById('trunk-fruit-name');
+  if (tb && tfn && state.chosenFruit) { tb.style.display='block'; tfn.textContent=state.chosenFruit; }
+
+  const rb = document.getElementById('roots-trunk-banner');
+  const rtn = document.getElementById('roots-trunk-name');
+  if (rb && rtn && state.trunk.length > 0) { rb.style.display='block'; rtn.textContent=state.trunk.join(' · '); }
+
+  const trb = document.getElementById('truth-root-banner');
+  const trrn = document.getElementById('truth-root-name');
+  if (trb && trrn && state.roots.length > 0) { trb.style.display='block'; trrn.textContent=state.roots.join(' · '); }
+
+  const ctb = document.getElementById('choices-truth-banner');
+  const ctn = document.getElementById('choices-truth-name');
+  if (ctb && ctn && state.truth.length > 0) { ctb.style.display='block'; ctn.textContent=state.truth.join(' · '); }
+}
+
+// ── FRUIT SELECTION ────────────────────────────────────────────
+function proceedToTrunk() {
+  if (state.fruits.length > 0 && !state.chosenFruit) {
+    alert('Please choose one fruit to work with before continuing.');
+    return;
+  }
+  goTo('screen-trunk');
+}
+
+function selectFruit(label) {
+  state.chosenFruit = label;
+  document.querySelectorAll('.fruit-chip').forEach(c => c.classList.toggle('selected', c.dataset.label === label));
+  updatePeekTree();
+}
+
+// ── ADD OTHER ──────────────────────────────────────────────────
+function addOther(section) {
+  const input = document.getElementById(`${section}-other-input`);
+  const val = input.value.trim();
+  if (!val) return;
+  state[section] = [...(state[section]||[]), val];
+  input.value = '';
+  document.getElementById(`${section}-other-wrap`).style.display = 'none';
+  // Re-render result tags
+  const resultEl = document.getElementById(`${section}-result`);
+  if (resultEl) {
+    const cls = section === 'roots' ? 'root' : section === 'truth' ? 'truth' : section === 'trunk' ? 'trunk' : 'fruit';
+    const tagsHtml = state[section].map(l=>`<span class="tree-tag ${cls}">${l}</span>`).join('');
+    const existingTags = resultEl.querySelector('.tree-tags');
+    if (existingTags) existingTags.innerHTML = tagsHtml;
+  }
+  // For fruits, also update chips
+  if (section === 'fruits') {
+    const chips = document.getElementById('fruit-chips');
+    if (chips) {
+      chips.innerHTML = state.fruits.map(l=>`<div class="fruit-chip${state.chosenFruit===l?' selected':''}" data-label="${l}" onclick="selectFruit('${l}')">${l}</div>`).join('');
+    }
+  }
+  updatePeekTree();
+}
+
+// ── CLAUDE API ─────────────────────────────────────────────────
+async function callClaude(system, user) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, system, messages:[{role:'user',content:user}] })
+  });
+  const d = await r.json();
+  return d.content[0].text;
+}
+
+// ── DISTILL ────────────────────────────────────────────────────
+async function distillFruits() {
+  const btn = document.getElementById('distill-fruits-btn');
+  const thinking = document.getElementById('fruits-thinking');
+  const result = document.getElementById('fruits-result');
+  btn.disabled = true; thinking.style.display='flex'; result.style.display='none';
+  const text = ['fruit-1','fruit-2','fruit-3','fruit-4'].map(id=>document.getElementById(id).value).filter(Boolean).join('\n\n');
+  if (!text.trim()) { thinking.style.display='none'; result.style.display='block'; result.innerHTML='<p style="font-size:12px;color:var(--clay);">Please write something above first.</p>'; btn.disabled=false; return; }
+  const system = 'You distill written responses about behavioral patterns into short fruit labels. Return ONLY a valid JSON array of 3-6 short strings (2-4 words each) describing visible behavioral patterns. No markdown. Example: ["people pleasing","shutting down","overworking"]';
+  try {
+    const raw = await callClaude(system, text);
+    const labels = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    state.fruits = labels;
+    thinking.style.display='none'; result.style.display='block';
+    result.innerHTML = `<p style="font-size:11px;color:var(--clay);margin-bottom:6px;">Your fruits:</p><div class="tree-tags">${labels.map(l=>`<span class="tree-tag fruit">${l}</span>`).join('')}</div><div style="margin-top:8px;display:flex;gap:8px;align-items:center;"><button class="redo-btn" onclick="redoSection('fruits-distill')">Redo &#8635;</button><button class="redo-btn" onclick="showOther('fruits')">+ Add my own</button></div>`;
+    const sel = document.getElementById('fruit-selection');
+    const chips = document.getElementById('fruit-chips');
+    sel.style.display='block';
+    chips.innerHTML = labels.map(l=>`<div class="fruit-chip" data-label="${l}" onclick="selectFruit('${l}')">${l}</div>`).join('');
+    updatePeekTree();
+  } catch(e) { thinking.style.display='none'; result.style.display='block'; result.innerHTML='<p style="font-size:12px;color:var(--clay);">Something went wrong. Please try again.</p>'; btn.disabled=false; }
+}
+
+async function distillSection(section) {
+  const btn = document.getElementById(`distill-${section}-btn`);
+  const thinking = document.getElementById(`${section}-thinking`);
+  const result = document.getElementById(`${section}-result`);
+  btn.disabled=true; thinking.style.display='flex'; result.style.display='none';
+  const fieldMap = { trunk:['trunk-somatic','trunk-emotion','trunk-1','trunk-2','trunk-3'], roots:['root-1','root-2','root-somatic','root-3'], truth:['truth-1','truth-2','truth-3','truth-4'] };
+  const text = fieldMap[section].map(id=>document.getElementById(id)?.value||'').filter(Boolean).join('\n\n');
+  if (!text.trim()) { thinking.style.display='none'; result.style.display='block'; result.innerHTML='<p style="font-size:12px;color:var(--clay);">Please write something above first.</p>'; btn.disabled=false; return; }
+  const systems = {
+    trunk:'You distill written responses about life experiences into short trunk labels. Return ONLY a valid JSON array of 3-5 short strings (2-5 words each). No markdown.',
+    roots:'You distill written responses into a core belief statement. Return ONLY a valid JSON array of 1-2 short first-person belief strings starting with "I" (e.g. "I am not enough"). No markdown.',
+    truth:'You condense written responses about a new truth into shorter statements using the participant\'s own words as closely as possible. Do not reframe, reinterpret, or add positive affirmations. Do not write life mottos or inspirational phrases. Simply find the clearest, most essential version of what they actually wrote. Return ONLY a valid JSON array of 1-2 short first-person strings. No markdown.',
+  };
+  const cls = section==='roots'?'root':section==='truth'?'truth':'trunk';
+  try {
+    const raw = await callClaude(systems[section], text);
+    const labels = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    state[section] = labels;
+    thinking.style.display='none'; result.style.display='block';
+    result.innerHTML = `<p style="font-size:11px;color:var(--clay);margin-bottom:6px;">Added to your tree:</p><div class="tree-tags">${labels.map(l=>`<span class="tree-tag ${cls}">${l}</span>`).join('')}</div><div style="margin-top:8px;display:flex;gap:8px;align-items:center;"><button class="redo-btn" onclick="redoSection('${section}')">Redo &#8635;</button><button class="redo-btn" onclick="showOther('${section}')">+ Add my own</button></div>`;
+    updatePeekTree(); updateBanners();
+    if (section==='truth') updateTruthTree();
+  } catch(e) { thinking.style.display='none'; result.style.display='block'; result.innerHTML='<p style="font-size:12px;color:var(--clay);">Something went wrong. Please try again.</p>'; btn.disabled=false; }
+}
+
+function showOther(section) { document.getElementById(`${section}-other-wrap`).style.display='block'; }
+
+function redoSection(section) {
+  if (section==='fruits-distill') { state.fruits=[]; state.chosenFruit=''; document.getElementById('fruits-result').style.display='none'; document.getElementById('fruit-selection').style.display='none'; document.getElementById('distill-fruits-btn').disabled=false; }
+  else { state[section]=[]; document.getElementById(`${section}-result`).style.display='none'; document.getElementById(`distill-${section}-btn`).disabled=false; }
+  updatePeekTree();
+}
+
+// ── CHOICES PAGE ───────────────────────────────────────────────
+function updateChoicesPage() {
+  const somatic = [document.getElementById('trunk-somatic')?.value, document.getElementById('root-somatic')?.value].filter(Boolean).join(' / ');
+  const somaticWrap = document.getElementById('choices-somatic-recall');
+  const somaticText = document.getElementById('choices-somatic-text');
+  if (somatic && somaticWrap && somaticText) { somaticWrap.style.display='block'; somaticText.textContent=somatic; }
+  const rootInline = document.getElementById('choices-root-inline');
+  if (rootInline && state.roots.length > 0) rootInline.textContent = '"' + state.roots.join(', ') + '"';
+  const rootPhrase = document.getElementById('choices-root-phrase');
+  if (rootPhrase && state.roots.length > 0) rootPhrase.textContent = state.roots.join(', ');
+  const truthPhrase = document.getElementById('choices-truth-phrase');
+  if (truthPhrase && state.truth.length > 0) truthPhrase.textContent = state.truth.join(', ');
+}
+
+// ── TREE PEEK ──────────────────────────────────────────────────
+const fruitPos  = [[108,60],[160,28],[226,14],[270,28],[318,60]];
+const trunkPos  = [[258,218],[258,202],[258,186],[258,170],[258,154]];
+const rootPos   = [[58,248],[182,262],[302,248]];
+const truthPos  = [[80,278],[210,290],[330,278]];
+
+function makeTags(labels, cls, emptyMsg, clickable=false) {
+  if (!labels || !labels.length) return `<span class="tree-empty">${emptyMsg}</span>`;
+  return labels.map(l=>`<span class="tree-tag ${cls}${clickable?' clickable':''}" ${clickable?`onclick="startWithFruit('${l}')" title="Work through this fruit"`:''}>${l}</span>`).join('');
+}
+
+function updateSvgGroup(id, labels, positions, fontFamily, fontStyle, fontWeight, fontSize, fill) {
+  const g = document.getElementById(id);
+  if (!g || !labels) return;
+  g.innerHTML = labels.slice(0,5).map((l,i)=>{const[x,y]=positions[i]||positions[0];return`<text x="${x}" y="${y}" font-family="${fontFamily}" font-style="${fontStyle}" font-weight="${fontWeight}" font-size="${fontSize}" fill="${fill}">${l}</text>`;}).join('');
+}
+
+function updatePeekTree() {
+  document.getElementById('peek-fruits-tags').innerHTML = makeTags(state.fruits,'fruit','Complete Part One');
+  document.getElementById('peek-trunk-tags').innerHTML = makeTags(state.trunk,'trunk','Complete Part Two');
+  document.getElementById('peek-roots-tags').innerHTML = makeTags(state.roots,'root','Complete Part Three');
+  document.getElementById('peek-truth-tags').innerHTML = makeTags(state.truth,'truth','Complete Part Four');
+  const peekFruits = state.chosenFruit ? [state.chosenFruit] : state.fruits;
+  updateSvgGroup('peek-fruit-labels', peekFruits, fruitPos, 'Georgia','italic','normal','9','#8B3A2A');
+  updateSvgGroup('peek-trunk-labels', state.trunk, trunkPos, 'Arial','normal','normal','8','#3A5A30');
+  updateSvgGroup('peek-root-labels', state.roots, rootPos, 'Georgia','italic','bold','9','#7A5A1A');
+  updateSvgGroup('peek-truth-labels', state.truth, truthPos, 'Georgia','italic','normal','9','#2A4A6A');
+}
+
+function updateTruthTree() {
+  document.getElementById('tt-fruit').innerHTML = state.chosenFruit ? `<span class="tree-tag fruit">${state.chosenFruit}</span>` : '<span class="tree-empty">&#8212;</span>';
+  document.getElementById('tt-trunk').innerHTML = makeTags(state.trunk,'trunk','Not yet distilled');
+  document.getElementById('tt-root').innerHTML = makeTags(state.roots,'root','Not yet distilled');
+  document.getElementById('tt-truth').innerHTML = makeTags(state.truth,'truth','Not yet distilled');
+}
+
+function openTreePeek() { updatePeekTree(); document.getElementById('treePeekModal').style.display='flex'; }
+function closeTreePeek() { document.getElementById('treePeekModal').style.display='none'; }
+
+// ── SUMMARY ────────────────────────────────────────────────────
+async function updateSummary() {
+  updatePeekTree();
+  // SVG
+  updateSvgGroup('sum-svg-fruits', state.fruits, fruitPos, 'Georgia','italic','normal','9','#8B3A2A');
+  updateSvgGroup('sum-svg-trunk', state.trunk, trunkPos, 'Arial','normal','normal','8','#3A5A30');
+  updateSvgGroup('sum-svg-roots', state.roots, rootPos, 'Georgia','italic','bold','9','#7A5A1A');
+  updateSvgGroup('sum-svg-truth', state.truth, truthPos, 'Georgia','italic','normal','9','#2A4A6A');
+  // Tag lists
+  document.getElementById('sum-all-fruits').innerHTML = makeTags(state.fruits,'fruit','&#8212;');
+  document.getElementById('sum-chosen-fruit-tags').innerHTML = state.chosenFruit ? `<span class="tree-tag fruit">${state.chosenFruit}</span>` : '<span class="tree-empty">&#8212;</span>';
+  document.getElementById('sum-trunk').innerHTML = makeTags(state.trunk,'trunk','&#8212;');
+  document.getElementById('sum-roots').innerHTML = makeTags(state.roots,'root','&#8212;');
+  document.getElementById('sum-truth').innerHTML = makeTags(state.truth,'truth','&#8212;');
+  // Other fruits to work through
+  const others = state.fruits.filter(f => f !== state.chosenFruit);
+  const otherEl = document.getElementById('sum-other-fruits');
+  if (otherEl) otherEl.innerHTML = others.length ? makeTags(others,'fruit','',true) : '<span class="tree-empty">All fruits worked through.</span>';
+  // Written responses
+  document.getElementById('sum-opening').textContent = document.getElementById('opening-response').value||'&#8212;';
+  document.getElementById('sum-forward').textContent = document.getElementById('choice-4').value||'&#8212;';
+  // Dynamic narrative
+  await generateNarrative();
+  // Save to journal
+  saveEntry();
+}
+
+async function generateNarrative() {
+  const narrativeEl = document.getElementById('summary-narrative');
+  const opening = document.getElementById('opening-response').value;
+  const somatic = [document.getElementById('trunk-somatic')?.value, document.getElementById('root-somatic')?.value].filter(Boolean).join('; ');
+  const emotion = document.getElementById('trunk-emotion')?.value;
+  const trunk1 = document.getElementById('trunk-1')?.value;
+  const forward = document.getElementById('choice-4')?.value;
+  const system = `You write plain, reflective summaries for people who have completed a self-discovery exercise. Your role is to mirror back what they wrote — nothing more. Do not interpret, analyze, or suggest what anything means for them. Do not connect dots, make implications, or tell them what shifted. Do not use language like "this suggests," "this means," "you may find," or "this points to." Do not tell them what to do next. Begin with something like 'In this session' or 'In the work you just did' to ground it as a record of what happened, not a reading of what it means. Simply reflect what they shared back to them in clear, warm, plain language. 2-3 short paragraphs. Use second person. Stay close to their own words. You are a mirror, not a guide.`;
+  const user = `The person just worked through this experience:
+
+Fruit they focused on: ${state.chosenFruit}
+All fruits they identified: ${state.fruits.join(', ')}
+What felt close to the surface: ${opening}
+Body sensation / somatic: ${somatic}
+Emotion underneath: ${emotion}
+Key trunk experiences: ${trunk1} / Trunk labels: ${state.trunk.join(', ')}
+Root belief found: ${state.roots.join(', ')}
+New truth planted: ${state.truth.join(', ')}
+What they want to carry forward: ${forward}
+
+Write a plain reflective summary that mirrors back what they wrote. Do not interpret, connect dots, or suggest what anything means. Only reflect their own words back to them clearly.`;
+  try {
+    const narrative = await callClaude(system, user);
+    narrativeEl.innerHTML = narrative.split('\n\n').filter(Boolean).map(p=>`<p>${p}</p>`).join('');
+  } catch(e) {
+    narrativeEl.innerHTML = '<p style="font-size:13px;color:var(--clay);">Your summary will appear here once the experience is connected to the internet.</p>';
+  }
+}
+
+// ── COPY ───────────────────────────────────────────────────────
+function copySummary() {
+  const narrative = document.getElementById('summary-narrative')?.innerText||'';
+  const text = `ROOTS & FRUITS \u2014 My Summary\nrootworkmethod.org\n\nFruit I worked with: ${state.chosenFruit}\nAll fruits: ${state.fruits.join(', ')}\nTrunk: ${state.trunk.join(', ')}\nRoot: ${state.roots.join(', ')}\nNew truth: ${state.truth.join(', ')}\n\n${narrative}\n\nWhat I want to carry forward:\n${document.getElementById('choice-4').value}\n\n\u201CIt\u2019s okay to feel sad when sad things happen. Your feelings are not a verdict on your worth.\u201D\n\nrootworkmethod.org`;
+  navigator.clipboard.writeText(text).then(()=>{ const b=document.querySelector('.copy-btn'); b.textContent='Copied \u2713'; setTimeout(()=>b.textContent='Copy my summary',2000); });
+}
+
+// ── RESTART ────────────────────────────────────────────────────
+function startWithFruit(fruit) {
+  closeTreePeek && closeTreePeek();
+  state.chosenFruit = fruit;
+  state.trunk=[]; state.roots=[]; state.truth=[];
+  ['trunk','roots','truth'].forEach(s=>{
+    const r=document.getElementById(`${s}-result`); const b=document.getElementById(`distill-${s}-btn`);
+    if(r){r.style.display='none';r.innerHTML='';} if(b) b.disabled=false;
+    document.getElementById(`${s}-other-wrap`).style.display='none';
+  });
+  ['trunk-somatic','trunk-emotion','trunk-1','trunk-2','trunk-3','root-1','root-2','root-somatic','root-3','truth-1','truth-2','truth-3','truth-4','choice-1','choice-2','choice-3','choice-4'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  goTo('screen-trunk');
+}
+
+function restartExperience(keepFruits) {
+  const msg = keepFruits ? 'Work through another fruit? Your fruit list will be kept.' : 'Start completely over? All responses will be cleared.';
+  if (!confirm(msg)) return;
+  if (!keepFruits) {
+    state.fruits=[];
+    const fs=document.getElementById('fruit-selection'); if(fs) fs.style.display='none';
+    const fc=document.getElementById('fruit-chips'); if(fc) fc.innerHTML='';
+    const fr=document.getElementById('fruits-result'); if(fr){fr.style.display='none';fr.innerHTML='';}
+    const fb=document.getElementById('distill-fruits-btn'); if(fb) fb.disabled=false;
+    ['fruit-1','fruit-2','fruit-3','fruit-4','opening-response'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  }
+  state.chosenFruit=''; state.trunk=[]; state.roots=[]; state.truth=[];
+  ['trunk','roots','truth'].forEach(s=>{
+    const r=document.getElementById(s+'-result');
+    const b=document.getElementById('distill-'+s+'-btn');
+    const ow=document.getElementById(s+'-other-wrap');
+    if(r){r.style.display='none';r.innerHTML=''}
+    if(b) b.disabled=false;
+    if(ow) ow.style.display='none';
+  });
+  ['trunk-somatic','trunk-emotion','trunk-1','trunk-2','trunk-3','root-1','root-2','root-somatic','root-3','truth-1','truth-2','truth-3','truth-4','choice-1','choice-2','choice-3','choice-4'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  // Reset banners
+  ['trunk-fruit-banner','roots-trunk-banner','truth-root-banner','choices-truth-banner'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  // Reset summary narrative
+  const sn=document.getElementById('summary-narrative'); if(sn) sn.innerHTML='';
+  // Navigate
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  currentScreen = keepFruits ? 'screen-fruits' : 'screen-welcome';
+  document.getElementById(currentScreen).classList.add('active');
+  document.getElementById('progressFill').style.width = keepFruits ? '25%' : '0%';
+  document.getElementById('navProgress').textContent = keepFruits ? 'Part 1 - Fruits' : '';
+  document.getElementById('floatingTreeBtn').style.display='none';
+  window.scrollTo(0,0);
+}
+
+// ── EXPLAINER ──────────────────────────────────────────────────
+const animSteps = [
+  {text:"Meet Maya. She is a 38-year-old nurse who keeps burning out. She loves her work but cannot stop taking on more than she can carry. She has tried setting limits. Nothing sticks. She does not know why yet.", show:[], fade:['ac-main','ac-left','ac-right','at-trunk','ar-l1','ar-r1']},
+  {text:"Step 1 \u2014 Fruits. Maya names what she can see: overworking, withdrawal, anger, perfectionism. She does not know why these patterns exist yet. She just names them honestly. These are the fruits \u2014 the door into the work.", show:['afd1','afd2','afd3','afd4','afd5','afl1','afl2','afl3','afl4','afl5'], fade:['ar-l2','ar-r2']},
+  {text:"Step 2 \u2014 Maya picks one fruit to follow: overworking. She checks in with her body first \u2014 tightness in her chest, a low hum of anxiety. That feeling leads her to memories. The trunk holds those memories \u2014 not as causes, but as confirmations of what was already there.", show:['atl1','atl2','atl3'], fade:[]},
+  {text:"Step 3 \u2014 Roots. The root was already there before any of these memories \u2014 written into Maya's nervous system before she had words for it. The trunk experiences did not create the root. They revealed it: 'I am too much.' 'I will be abandoned.' 'I am not enough.'", show:['arl1','arl2','arl3'], fade:[]},
+  {text:"Step 4 \u2014 The Truth. Maya asks: what did the root not know? Her dad left because of his own pain \u2014 not because she was too much. That is information the root never had. She plants something new alongside it.", show:['anew'], fade:[]},
+  {text:"Step 5 \u2014 The Choices. Maya now has a pause she did not have before. The next time she overworks, she recognizes it: 'this is the root running.' That moment of recognition is where change begins. Not because she is stronger \u2014 because she has something stronger to hold onto.", show:[], fade:[]}
+];
+let currentAnimStep=0;
+const shownEls=new Set(); const fadedEls=new Set();
+
+function openExplainer() {
+  document.getElementById('explainer-overlay').style.display='flex';
+  currentAnimStep=0; shownEls.clear(); fadedEls.clear();
+  ['ac-main','ac-left','ac-right','at-trunk','ar-l1','ar-r1','ar-l2','ar-r2','afd1','afd2','afd3','afd4','afd5','afl1','afl2','afl3','afl4','afl5','atl1','atl2','atl3','arl1','arl2','arl3','anew'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transition='opacity 0.8s ease';}});
+  buildDots(); setTimeout(()=>renderAnimStep(0),100);
+}
+function closeExplainer() { document.getElementById('explainer-overlay').style.display='none'; }
+function buildDots() { document.getElementById('animDots').innerHTML=animSteps.map((_,i)=>`<div class="anim-dot${i===0?' active':''}" onclick="jumpAnim(${i})"></div>`).join(''); }
+function jumpAnim(s) { currentAnimStep=s; renderAnimStep(s); }
+function renderAnimStep(step) {
+  const s=animSteps[step];
+  document.getElementById('animText').textContent=s.text;
+  document.querySelectorAll('.anim-dot').forEach((d,i)=>d.classList.toggle('active',i===step));
+  s.show.forEach(id=>{if(!shownEls.has(id)){shownEls.add(id);const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transition='opacity 0.8s ease';setTimeout(()=>el.style.opacity='1',50);}}});
+  s.fade.forEach(id=>{if(!fadedEls.has(id)){fadedEls.add(id);const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transition='opacity 1s ease';setTimeout(()=>el.style.opacity='1',50);}}});
+  document.getElementById('animPrev').disabled=step===0;
+  const nb=document.getElementById('animNext');
+  if(step===animSteps.length-1){nb.textContent='Done';nb.onclick=closeExplainer;}
+  else{nb.textContent='Next >';nb.onclick=()=>animStep(1);}
+}
+function animStep(dir) { currentAnimStep=Math.max(0,Math.min(animSteps.length-1,currentAnimStep+dir)); renderAnimStep(currentAnimStep); }
+document.getElementById('explainer-overlay').addEventListener('click',function(e){if(e.target===this)closeExplainer();});
+</script>
+</body>
+</html>
